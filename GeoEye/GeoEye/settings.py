@@ -37,9 +37,25 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'leaflet',
+    'django.contrib.gis',
     'core',
+    'channels',
 ]
+'''
+# Use channels layer as the default backend for Django.
+ASGI_APPLICATION = '<your_project_name>.asgi.application'
 
+# Example Redis configuration for channels layer
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
+'''
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -70,6 +86,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'GeoEye.wsgi.application'
 
+ASGI_APPLICATION = 'your_project.routing.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
@@ -111,7 +128,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Nairobi'
 
 USE_I18N = True
 
@@ -127,3 +144,10 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+LEAFLET_CONFIG = {
+    'DEFAULT_CENTER': (0.023, 36.87),
+    'DEFAULT_ZOOM': 5,
+    'ATTRIBUTION_PREFIX': 'Powered by django-leaflet, made by SOLOMON KIPKIRUI',
+    #'MINIMAP': True
+    'SCALE': 'both'
+}
