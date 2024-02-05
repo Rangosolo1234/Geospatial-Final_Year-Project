@@ -27,8 +27,8 @@ class Counties(models.Model):
         verbose_name_plural ="Counties"
 #Class model for Nyeri view my area of study
 class StudyArea(models.Model):
-    #name = models.CharField(max_length=50)
     geom = models.PolygonField(srid=4326)
+    name = models.CharField(max_length=50, default="Nyeri View")
 
     class Meta:
         verbose_name_plural = "StudyArea"
@@ -45,5 +45,12 @@ class VoltageData(models.Model):
 
 class PowerLine(models.Model):
     geom = models.LineStringField(srid=4326)
+    name = models.CharField(max_length=50, default='Phase')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "Power line"
 
     #Other fileds not much necessary

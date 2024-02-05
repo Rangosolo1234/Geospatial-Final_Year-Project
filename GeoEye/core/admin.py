@@ -14,12 +14,12 @@ class CountiesAdmin(LeafletGeoAdmin):
 admin.site.register(Counties, CountiesAdmin)
 
 class StudyAreaAdmin(LeafletGeoAdmin):
-    list_display = ('id', 'geom',)
-    search_fields = ['id']
+    list_display = ('name', 'geom',)
+    search_fields = ['name']
 
 class PowerLineAdmin(LeafletGeoAdmin):
-    list_display = ('id', 'geom',)
-    search_fields = ['id']
+    list_display = ('name', 'geom',)
+    search_fields = ['name']
 
 admin.site.register(PowerLine, PowerLineAdmin)
 
