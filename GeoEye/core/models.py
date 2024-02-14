@@ -23,6 +23,10 @@ class Counties(models.Model):
     shape_area = models.FloatField(default=0)
     geom = models.MultiPolygonField(srid=4326)
 
+
+    def __str__(self):
+        return self.county_nam
+
     class Meta:
         verbose_name_plural ="Counties"
 #Class model for Nyeri view my area of study

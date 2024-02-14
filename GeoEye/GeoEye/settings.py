@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+#from django_leaflet.widgets import layers
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -41,21 +43,14 @@ INSTALLED_APPS = [
     'django.contrib.gis',
     'core',
     'channels',
+    'crispy_forms',
+    'crispy_bootstrap5',
 ]
-'''
-# Use channels layer as the default backend for Django.
-ASGI_APPLICATION = '<your_project_name>.asgi.application'
 
-# Example Redis configuration for channels layer
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
-        },
-    },
-}
-'''
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -71,7 +66,7 @@ ROOT_URLCONF = 'GeoEye.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -138,16 +133,29 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
-
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LEAFLET_CONFIG = {
-    'DEFAULT_CENTER': (0.023, 36.87),
-    'DEFAULT_ZOOM': 5,
+    'DEFAULT_CENTER': (-0.394830, 36.951800),
+    'DEFAULT_ZOOM': 17,
     'ATTRIBUTION_PREFIX': 'Powered by django-leaflet, made by SOLOMON KIPKIRUI',
-    #'MINIMAP': True
-    'SCALE': 'both'
+    'MINIMAP': True,
+    'SCALE': 'both',
+    'TILES': [
+    ('Streets', 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {'attribution': '&copy; Contributors'}),
+    ('CartoDB Dark Matter', 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {'attribution': '© CartoDB'}),
+    ('OpenTopoMap', 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {'attribution': '© OpenTopoMap'}),
+    ('Satellite', 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoicmFuZ29zb2xvMTIzNCIsImEiOiJjbHM5Z3hoYWswNXVsMmlvZjFnYmIzdmZwIn0.oDd9iakLkVMY4Xt93ibJ2g', {'attribution': '&copy; Big eye', 'maxZoom': 18, 'id': 'mapbox/satellite-v9', 'tileSize': 512, 'zoomOffset': -1}),
+    ],
+
+    'OVERLAYS': [
+    ('Cadastral', 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {'attribution': '&copy; IGN'}),
+    ],
 }

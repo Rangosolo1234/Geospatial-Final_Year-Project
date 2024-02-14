@@ -1,0 +1,138 @@
+/* styles.css */
+
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  background-color: rgb(243, 220, 9);
+}
+
+#header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  padding: 0.5% 0; /* Adjust padding using percentage for responsiveness */
+  background: rgb(2, 46, 90);
+  color: white;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo h1 {
+  margin: 0;
+  font-size: 1.5vw; /* Responsive font size */
+  color: white;
+}
+
+.navbar ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.navbar li {
+  margin-right: 20%; /* Adjust margin using percentage for responsiveness */
+  display: flex;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+}
+
+.nav-link:hover {
+  color: rgb(40, 210, 216);
+}
+
+#bottom-navbar {
+  background-color: rgb(2, 46, 90);
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: 0.1% 0; /* Adjust padding using percentage for responsiveness */
+  text-align: center;
+}
+
+#bottom-navbar a {
+  color: white;
+  padding: 0.1%; /* Adjust padding using percentage for responsiveness */
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1vw; /* Responsive font size */
+  margin: 0 1%; /* Adjust margin using percentage for responsiveness */
+}
+
+#bottom-navbar a:hover {
+  background-color: #ddd;
+  color: rgb(40, 210, 216);
+}
+
+#gis {
+  width: 60%;
+  height: 86%;
+  position:fixed;
+  left: 39.9%;
+  border: 0.5px solid #968e8e;
+  /*margin-bottom: 12%;*/
+  margin-top: 9vh;
+}
+
+.coordinates-control {
+  position: center;
+  bottom: 10px;
+  right: 10px;
+  background-color: rgb(216, 210, 210);
+  padding: 5px;
+  border: 1px solid #494747;
+  font-size: 12px;
+  z-index: 1000;
+}
+
+#real-time-graph {
+  position: fixed;
+  bottom: 0;
+  left: 0.2%;
+  width: 30%; /* Adjust the width based on your preference */
+  height: 40vh; /* Adjust the height based on your preference */
+  background-color: #ffffff; /* Set background color if needed */
+  border: 1px solid #5f5c5c; /* Add border if needed */
+  z-index: 2; /* Adjust z-index to make sure it's above other elements */
+  /* Add any additional styling as needed */
+  margin-bottom: 2.2%;
+}
+#table {
+  position: fixed;
+  bottom: 0;
+  left: 31%;
+  width: 8.5%; /* Adjust the width based on your preference */
+  height: 40vh; /* Adjust the height based on your preference */
+  background-color: #c5b9b9; /* Set background color if needed */
+  border: 1px solid #312f2f; /* Add border if needed */
+  border-radius: 10px; /* Adjust the border-radius for rounded corners */
+  z-index: 2; /* Adjust z-index to make sure it's above other elements */
+  /* Add any additional styling as needed */
+  margin-bottom: 2.2%;
+}
+
+.background-image {
+  position: fixed;
+  top: 8%;
+  left: 0.2%;
+  width: 39.65%; /* Adjust the width based on your preference */
+  height: 87vh; /* Adjust the height based on your preference */
+  border: 1px solid #5f5c5c; /* Add border if needed */
+  z-index: 0; /* Adjust z-index to make sure it's above other elements */
+  /* Add any additional styling as needed */
+  background-image: url('/static/assets/img/plc.gif');
+  background-size: cover;
+  background-repeat: no-repeat;
+}

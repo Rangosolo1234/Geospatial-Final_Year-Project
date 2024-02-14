@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  {% load static %}
+  {% load leaflet_tags %}
+  {% leaflet_js plugins="ALL" %}
+  {% leaflet_css plugins="ALL" %}
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PulseMap Energy Explorer</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="{% static 'assets/img/favicon.png' %}" rel="icon">
+  <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+  <link href="{% static 'assets/img/style.css' %}" rel="stylesheet">
+</head>
+<body>
+  <div id="table"></div>
+  <div id="real-time-graph"></div>
+  <header id="header">
+    <div class="container d-flex align-items-center justify-content-between position-relative">
+
+      <div class="logo">
+        <h1 class="text-light">PULSEMAP EE</h1>
+        <!-- Uncomment below if you prefer to use an image logo -->
+        <!--<a href="index.html"><img src="{% static 'assets/img/logo.png' %}" alt="" class="img-fluid"></a>-->
+      </div>
+
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
+          <!--  <li><a class="nav-link scrollto" href="#about">About Us</a></li>>   -->
+          <li><a class="nav-link scrollto" href="#services">Services</a></li>
+          <li><a class="nav-link scrollto" href="#portfolio">Portfolio</a></li>
+          <li><a class="nav-link scrollto" href="#team">Team</a></li>
+        </ul>
+      </nav>
+      <div class="search-box">
+        <form action="#" method="get">
+            <input type="text" placeholder="Search..." name="search">
+            <button type="submit"><i class="bi bi-search"></i></button>
+        </form>
+    </div>
+</header>
+<div>
+  {% leaflet_map "gis" callback="window.out_layers" %}
+</div>
+  <script type="text/javascript">
+    function out_layers(map, options) {
+      var datasets = new L.GeoJSON.AJAX("{% url 'powerlines' %}", {});
+
+      datasets.addTo(map);
+
+      var drawnItems = new L.FeatureGroup();
+      map.addLayer(drawnItems);
+
+      var drawControl = new L.Control.Draw({
+        draw: {
+          polygon: true,
+          polyline: true,
+          rectangle: true,
+          circle: true,
+          marker: true,
+        },
+        edit: {
+          featureGroup: drawnItems,
+          remove: true,
+        }
+      });
+      map.addControl(drawControl);
+
+      // Event handlers for created and edited layers
+      map.on(L.Draw.Event.CREATED, function (event) {
+        var layer = event.layer;
+        drawnItems.addLayer(layer);
+      });
+
+      map.on(L.Draw.Event.EDITED, function (event) {
+        var layers = event.layers;
+        layers.eachLayer(function (layer) {
+          // Handle edited layers as needed
+        });
+      });
+
+      // Create a custom control for displaying coordinates
+      var coordinatesControl = L.control({ position: 'bottomright' });
+
+      coordinatesControl.onAdd = function (map) {
+        var div = L.DomUtil.create('div', 'coordinates-control');
+        return div;
+      };
+
+      coordinatesControl.addTo(map);
+
+      // Event handler for mousemove to update coordinates
+      map.on('mousemove', function (event) {
+        var latlng = event.latlng;
+        document.querySelector('.coordinates-control').innerHTML = 'Latitude: ' + latlng.lat.toFixed(6) + '<br>Longitude: ' + latlng.lng.toFixed(6);
+      });
+    }
+    // Call the initializeMap function when the DOM is ready
+    document.addEventListener('DOMContentLoaded', function () {
+      initializeMap();
+    });
+  </script>
+  <!-- Vendor JS Files -->
+  <script src="{% static 'assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
+  <script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+  <script type="text/javascript" src="{% static 'cdnjs/leaflet.ajax.js' %}"></script>
+  <!--<script type="text/javascript" src="{% static 'cdnjs/leaflet.ajax.min.js' %}"></script>-->
+
+  <!-- Template Main JS File -->
+  <script src="{% static 'assets/js/main.js' %}"></script>
+  <!-- Bottom Navigation Bar -->
+<div id="bottom-navbar">
+  <a href="#about">About</a>
+  <a href="#contact">Contact</a>
+  <a href="#team">Team</a>
+</div>
+<div class="background-image"></div>
+</body>
+</html>

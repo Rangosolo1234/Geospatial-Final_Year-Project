@@ -9,7 +9,7 @@ class IncidencesAdmin(LeafletGeoAdmin):
 admin.site.register(Incidences, IncidencesAdmin)
 
 class CountiesAdmin(LeafletGeoAdmin):
-   list_display = ('objectid', 'county_nam')
+   list_display = ('county_nam', 'count', 'shape_area', 'objectid')
 
 admin.site.register(Counties, CountiesAdmin)
 
