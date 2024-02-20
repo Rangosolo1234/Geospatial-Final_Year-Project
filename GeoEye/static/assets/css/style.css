@@ -72,7 +72,7 @@ body {
 }
 
 #bottom-navbar a:hover {
-  background-color: #ddd;
+  /*background-color: #ddd;*/
   color: rgb(40, 210, 216);
 }
 
@@ -97,7 +97,7 @@ body {
   z-index: 1000;
 }
 
-#real-time-graph {
+#voltage-chart-container {
   position: fixed;
   bottom: 0;
   left: 0.2%;
@@ -112,8 +112,8 @@ body {
 #table {
   position: fixed;
   bottom: 0;
-  left: 31%;
-  width: 8.5%; /* Adjust the width based on your preference */
+  left: 30.5%;
+  width: 9%; /* Adjust the width based on your preference */
   height: 40vh; /* Adjust the height based on your preference */
   background-color: #c5b9b9; /* Set background color if needed */
   border: 1px solid #312f2f; /* Add border if needed */
@@ -126,7 +126,7 @@ body {
 .background-image {
   position: fixed;
   top: 8%;
-  left: 0.2%;
+  left: 0.1%;
   width: 39.65%; /* Adjust the width based on your preference */
   height: 87vh; /* Adjust the height based on your preference */
   border: 1px solid #5f5c5c; /* Add border if needed */

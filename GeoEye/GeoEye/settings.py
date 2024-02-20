@@ -41,8 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'leaflet',
     'django.contrib.gis',
-    'core',
     'channels',
+    'core',
     'crispy_forms',
     'crispy_bootstrap5',
 ]
@@ -157,5 +157,7 @@ LEAFLET_CONFIG = {
 
     'OVERLAYS': [
     ('Cadastral', 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {'attribution': '&copy; IGN'}),
+    #('', "{% url 'powerlines' %}", {}),
+    ('Counties', "{% url 'counties_datasets' %}", {}),
     ],
 }

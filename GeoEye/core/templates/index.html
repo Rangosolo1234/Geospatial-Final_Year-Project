@@ -28,11 +28,8 @@
 
   <!-- Template Main CSS File -->
   <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
-  <link href="{% static 'assets/img/style.css' %}" rel="stylesheet">
 </head>
 <body>
-  <div id="table"></div>
-  <div id="real-time-graph"></div>
   <header id="header">
     <div class="container d-flex align-items-center justify-content-between position-relative">
 
@@ -46,9 +43,9 @@
         <ul>
           <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
           <!--  <li><a class="nav-link scrollto" href="#about">About Us</a></li>>   -->
-          <li><a class="nav-link scrollto" href="#services">Services</a></li>
-          <li><a class="nav-link scrollto" href="#portfolio">Portfolio</a></li>
-          <li><a class="nav-link scrollto" href="#team">Team</a></li>
+          <li><a class="nav-link scrollto" href="#services">Direction</a></li>
+          <li><a class="nav-link scrollto" href="#portfolio">Measure</a></li>
+          <li><a class="nav-link scrollto" href="#team"></a></li>
         </ul>
       </nav>
       <div class="search-box">
@@ -58,14 +55,25 @@
         </form>
     </div>
 </header>
+<div id="table"></div>
+<div id="voltage-chart-container"></div>
 <div>
   {% leaflet_map "gis" callback="window.out_layers" %}
 </div>
   <script type="text/javascript">
     function out_layers(map, options) {
-      var datasets = new L.GeoJSON.AJAX("{% url 'powerlines' %}", {});
+      var powerline = new L.GeoJSON.AJAX("{% url 'powerlines'%}", {});
+      var Counties = new L.GeoJSON.AJAX("{% url 'KenyaCounties'%}", {});
+      //var powerline = new L.GeoJSON.AJAX("{% url 'powerlines' %}", {});
 
-      datasets.addTo(map);
+      var layerControl = L.control.layers(null, {
+        "powerline": powerline,
+        "Counties": Counties,
+        // Add more datasets as needed
+      }).addTo(map);
+
+      //Default dataset displayed on the map
+      powerline.addTo(map);
 
       var drawnItems = new L.FeatureGroup();
       map.addLayer(drawnItems);
@@ -115,9 +123,9 @@
       });
     }
     // Call the initializeMap function when the DOM is ready
-    document.addEventListener('DOMContentLoaded', function () {
-      initializeMap();
-    });
+    //document.addEventListener('DOMContentLoaded', function () {
+      //initializeMap();
+    //});
   </script>
   <!-- Vendor JS Files -->
   <script src="{% static 'assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
