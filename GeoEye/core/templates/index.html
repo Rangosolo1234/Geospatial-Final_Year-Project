@@ -28,6 +28,8 @@
 
   <!-- Template Main CSS File -->
   <link href="{% static 'assets/css/style.css' %}" rel="stylesheet">
+  <script src="https://code.earthengine.google.com/earthengine-api.js"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
   <header id="header">
@@ -55,8 +57,70 @@
         </form>
     </div>
 </header>
-<div id="table"></div>
+<div id="table" style="align-items: center;">
+    <button onclick="startRealTimeUpdate()">Start</button>
+    <button onclick="stopRealTimeUpdate()">Stop</button>
+</div>
+<div id="Alert-table">
+  <button id="alertButton" class="blue">Alert</button>
+  <span id="faultCount">0</span>
+</div>
 <div id="voltage-chart-container"></div>
+<div id="Statics-table">
+  <div id="button-container">
+    <button onclick="showDem()">Dem</button>
+    <button onclick="showWeatherStatistics()">Weather Statistics</button>
+    <button onclick="showPowerlineDataStatistics()">Powerline Data Statistics</button>
+  </div>
+  <div id="visualization-container">
+    <!-- Visualization box for Dem -->
+    <div id="dem-visualization" style="display: none;">
+        <!-- Add your dem visualization content here -->
+        <style>
+          table {
+            border-collapse: collapse;
+          }
+        
+          td {
+            border: 1px solid black;
+            padding: 8px; /* Optional: Add padding for better appearance */
+          }
+        </style>
+        <table border="1" style="background-color: rgb(67, 114, 114);">
+          <tr>
+            <td>V1, C1</td>
+            <td>V1, c2</td>
+            <td>V1, Cl 3</td>
+          </tr>
+          <tr>
+            <td>V2, C1</td>
+            <td>V2, C2</td>
+            <td>V2, C3</td>
+          </tr>
+          <tr>
+            <td>V3, C1</td>
+            <td>V3, C2</td>
+            <td>V3, C3</td>
+          </tr>
+        </table>
+        <!-- Add visualization elements as needed -->
+    </div>
+
+    <!-- Visualization box for Weather Statistics -->
+    <div id="weather-statistics-visualization" style="display: none;">
+        <!-- Add your weather statistics content here -->
+        <h2>Weather Statistics Visualization</h2>
+        <!-- Add visualization elements as needed -->
+    </div>
+
+    <!-- Visualization box for Powerline Data Statistics -->
+    <div id="powerline-data-statistics-visualization" style="display: none;">
+        <!-- Add your powerline data statistics content here -->
+        <h2>Powerline Data Statistics Visualization</h2>
+        <!-- Add visualization elements as needed -->
+    </div>
+</div>
+</div>
 <div>
   {% leaflet_map "gis" callback="window.out_layers" %}
 </div>
@@ -121,12 +185,83 @@
         var latlng = event.latlng;
         document.querySelector('.coordinates-control').innerHTML = 'Latitude: ' + latlng.lat.toFixed(6) + '<br>Longitude: ' + latlng.lng.toFixed(6);
       });
+
+
+      // Initialize the Earth Engine API
+    google.charts.load('current', { 'packages': ['corechart', 'table', 'charteditor'] });
+
+// Add the exported DEM to the map using leaflet-ee-vector
+    var demLayer = L.eeVector.layer({
+      url: 'path/to/your/DEM/kenya_DEM.tif', // Replace with the path to your exported DEM
+      name: 'Kenya DEM',
+      format: 'image/tiff',
+      visParams: { min: 0, max: 3000, palette: ['0000FF', '00FF00', 'FF0000'] }
+    });
+
+    demLayer.addTo(map);
     }
+
     // Call the initializeMap function when the DOM is ready
     //document.addEventListener('DOMContentLoaded', function () {
       //initializeMap();
     //});
   </script>
+  <script>
+    function showDem() {
+        hideAllVisualizations();
+        document.getElementById('dem-visualization').style.display = 'block';
+    }
+
+    function showWeatherStatistics() {
+        hideAllVisualizations();
+        document.getElementById('weather-statistics-visualization').style.display = 'block';
+    }
+
+    function showPowerlineDataStatistics() {
+        hideAllVisualizations();
+        document.getElementById('powerline-data-statistics-visualization').style.display = 'block';
+    }
+
+    function hideAllVisualizations() {
+        document.getElementById('dem-visualization').style.display = 'none';
+        document.getElementById('weather-statistics-visualization').style.display = 'none';
+        document.getElementById('powerline-data-statistics-visualization').style.display = 'none';
+    }
+</script>
+
+<script>
+  // Sample data (replace this with your actual data)
+  var timeData = ['2023-01-01T00:00:00', '2023-01-01T01:00:00', '2023-01-01T02:00:00'];
+  var voltageData = [220, 210, 240];
+
+  // Create a Plotly chart
+  var voltageChart = Plotly.newPlot('voltage-chart-container', [{
+      x: timeData,
+      y: voltageData,
+      type: 'scatter',
+      mode: 'lines+markers',
+      name: 'Voltage',
+  }]);
+
+  // Update the chart with new data (replace this with your real-time data update logic)
+  function updateChart() {
+      // Sample update data (replace this with your actual update logic)
+      var newTimeData = '2023-01-01T03:00:00';
+      var newVoltageData = 180;
+
+      // Update the chart
+      Plotly.extendTraces('voltage-chart-container', {
+          x: [[newTimeData]],
+          y: [[newVoltageData]],
+      }, [0]);
+
+      // Schedule the next update
+      setTimeout(updateChart, 1000); // Update every 1 second
+  }
+
+  // Start the real-time updates
+  updateChart();
+</script>
   <!-- Vendor JS Files -->
   <script src="{% static 'assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
   <script src="{% static 'assets/vendor/aos/aos.js' %}"></script>
@@ -134,15 +269,19 @@
   <script src="{% static 'assets/vendor/glightbox/js/glightbox.min.js' %}"></script>
   <script src="{% static 'assets/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
   <script src="{% static 'assets/vendor/swiper/swiper-bundle.min.js' %}"></script>
-  <script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>
+  <!--<script src="{% static 'assets/vendor/php-email-form/validate.js' %}"></script>-->
   <script type="text/javascript" src="{% static 'cdnjs/leaflet.ajax.js' %}"></script>
   <!--<script type="text/javascript" src="{% static 'cdnjs/leaflet.ajax.min.js' %}"></script>-->
 
   <!-- Template Main JS File -->
   <script src="{% static 'assets/js/main.js' %}"></script>
+  <script src="https://unpkg.com/leaflet-ee-vector/dist/leaflet-ee-vector.js"></script>
+  <!-- Add the Earth Engine API -->
+  <script src="https://earthengine.googleapis.com/api.js"></script>
+  
   <!-- Bottom Navigation Bar -->
 <div id="bottom-navbar">
-  <a href="#about">About</a>
+  <a href="#about">Help</a>
   <a href="#contact">Contact</a>
   <a href="#team">Team</a>
 </div>

@@ -123,6 +123,45 @@ body {
   margin-bottom: 2.2%;
 }
 
+#Alert-table {
+  position: fixed;
+  top: 9%;
+  left: 0.2%;
+  width: 10%;
+  height: 45.5vh;
+  background-color: rgba(253, 242, 242, 0.7); /* Adjust the last value (0.7) for transparency */
+  border: 1px solid #201e1e;
+  border-radius: 5px;
+  z-index: 2;
+  margin-bottom: 2.2%;
+}
+#alertButton {
+  margin-bottom: 5px;
+  padding: 8px;
+  cursor: pointer;
+}
+
+#alertButton.blue {
+  background-color: #3498db;
+  color: #fff;
+}
+
+#alertButton.red {
+  background-color: #e74c3c;
+  color: #fff;
+}
+#Statics-table {
+  position: fixed;
+  top: 9%;
+  left: 10.5%;
+  width: 29%;
+  height: 45.5vh;
+  background-color: rgba(253, 242, 242, 0.74); /* Adjust the last value (0.7) for transparency */
+  border: 1px solid #201e1e;
+  border-radius: 5px;
+  z-index: 2;
+  margin-bottom: 2.2%;
+}
 .background-image {
   position: fixed;
   top: 8%;

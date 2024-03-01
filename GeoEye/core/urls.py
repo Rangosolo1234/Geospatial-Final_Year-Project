@@ -5,5 +5,4 @@ urlpatterns = [
     path('', views.index, name = 'index'),
     path('counties_datasets', views.counties_datasets, name = 'KenyaCounties'),
     path('powerlinedata/', views.powerlinephase, name = 'powerlines'),
-    path('voltage-chart/', views.voltage_data_chart, name='voltage_data_chart'),
 ]

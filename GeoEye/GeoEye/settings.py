@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+import folium
 #from django_leaflet.widgets import layers
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     'core',
     'crispy_forms',
     'crispy_bootstrap5',
+    'folium',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
@@ -158,6 +160,6 @@ LEAFLET_CONFIG = {
     'OVERLAYS': [
     ('Cadastral', 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {'attribution': '&copy; IGN'}),
     #('', "{% url 'powerlines' %}", {}),
-    ('Counties', "{% url 'counties_datasets' %}", {}),
+    #('Counties', "{% url 'counties_datasets' %}", {}),
     ],
 }
