@@ -16,11 +16,11 @@ class Incidences(models.Model):
 
 #Class model for data for kenya counties
 class Counties(models.Model):
-    objectid = models.AutoField(primary_key=True, default=0)
+    objectid = models.IntegerField()
     county_nam = models.CharField(max_length=50)
-    count = models.FloatField(default=0)
-    shape_leng = models.FloatField(default=0)
-    shape_area = models.FloatField(default=0)
+    count = models.FloatField()
+    shape_leng = models.FloatField()
+    shape_area = models.FloatField()
     geom = models.MultiPolygonField(srid=4326)
 
 
@@ -43,13 +43,14 @@ class VoltageData(models.Model):
 
     def __str__(self):
         return f"VoltageData(value={self.value}, timestamp={self.timestamp})"
-    
+
     class Meta:
         verbose_name_plural = "VoltageData"
 
 class PowerLine(models.Model):
-    geom = models.LineStringField(srid=4326)
-    name = models.CharField(max_length=50, default='Phase')
+    geom = models.MultiLineStringField(srid=4326)
+    name = models.CharField(max_length=100, default='Phaseload')
+
 
     def __str__(self):
         return self.name
@@ -57,4 +58,27 @@ class PowerLine(models.Model):
     class Meta:
         verbose_name_plural = "Power line"
 
+
+class Cadastral(models.Model):
+    name = models.CharField(max_length=254)
+    folderpath = models.CharField(max_length=254)
+    symbolid = models.BigIntegerField()
+    altmode = models.IntegerField()
+    base = models.FloatField()
+    clamped = models.IntegerField()
+    extruded = models.IntegerField()
+    snippet = models.CharField(max_length=250, null=True)
+    popupinfo = models.CharField(max_length=250, null=True)
+    shape_leng = models.FloatField()
+    shape_area = models.FloatField()
+    geom = models.MultiPolygonField(srid=4326)
+
+    def __str__(self):
+        #return f"Parcel ID: {self.id}, Source: {self.rim_source}, Parcel No: {self.parcel_no}"
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "Cadastrals"
+
     #Other fileds not much necessary
+        

@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
-import folium
+#import folium
 #from django_leaflet.widgets import layers
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -40,13 +40,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'leaflet',
     'django.contrib.gis',
+    'leaflet',
     'channels',
     'core',
-    'crispy_forms',
-    'crispy_bootstrap5',
-    'folium',
+    #'crispy_forms',
+    #'crispy_bootstrap5',
+    #'folium',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
@@ -86,7 +86,7 @@ WSGI_APPLICATION = 'GeoEye.wsgi.application'
 ASGI_APPLICATION = 'your_project.routing.application'
 
 # Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+#https://docs.djangoproject.com/en/5.0/ref/settings/databases
 
 DATABASES = {
     'default': {
@@ -137,9 +137,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = (
+STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
-)
+    #os.path.join(BASE_DIR, 'geemap', 'static'),
+
+]
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
@@ -147,8 +149,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LEAFLET_CONFIG = {
     'DEFAULT_CENTER': (-0.394830, 36.951800),
     'DEFAULT_ZOOM': 17,
-    'ATTRIBUTION_PREFIX': 'Powered by django-leaflet, made by SOLOMON KIPKIRUI',
-    'MINIMAP': True,
+    'ATTRIBUTION_PREFIX': 'Powered by django-leaflet, made by SOLOMON KIPKIRU',
     'SCALE': 'both',
     'TILES': [
     ('Streets', 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {'attribution': '&copy; Contributors'}),
@@ -156,10 +157,4 @@ LEAFLET_CONFIG = {
     ('OpenTopoMap', 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {'attribution': '© OpenTopoMap'}),
     ('Satellite', 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoicmFuZ29zb2xvMTIzNCIsImEiOiJjbHM5Z3hoYWswNXVsMmlvZjFnYmIzdmZwIn0.oDd9iakLkVMY4Xt93ibJ2g', {'attribution': '&copy; Big eye', 'maxZoom': 18, 'id': 'mapbox/satellite-v9', 'tileSize': 512, 'zoomOffset': -1}),
     ],
-
-    'OVERLAYS': [
-    ('Cadastral', 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {'attribution': '&copy; IGN'}),
-    #('', "{% url 'powerlines' %}", {}),
-    #('Counties', "{% url 'counties_datasets' %}", {}),
-    ],
-}
+    }

@@ -142,12 +142,7 @@ body {
 }
 
 #alertButton.blue {
-  background-color: #3498db;
-  color: #fff;
-}
-
-#alertButton.red {
-  background-color: #e74c3c;
+  background-color: #ca431a;
   color: #fff;
 }
 #Statics-table {
@@ -174,4 +169,11 @@ body {
   background-image: url('/static/assets/img/plc.gif');
   background-size: cover;
   background-repeat: no-repeat;
+}
+
+.parcel-label {
+  background-color: white;
+  border: 1px solid black;
+  padding: 5px;
+  border-radius: 5px;
 }

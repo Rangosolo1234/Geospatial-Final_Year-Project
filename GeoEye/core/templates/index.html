@@ -16,7 +16,7 @@
   <link href="{% static 'assets/img/apple-touch-icon.png' %}" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  <!--<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">-->
 
   <!-- Vendor CSS Files -->
   <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
@@ -86,7 +86,7 @@
             padding: 8px; /* Optional: Add padding for better appearance */
           }
         </style>
-        <table border="1" style="background-color: rgb(67, 114, 114);">
+        <table style="background-color: rgb(67, 114, 114); border: 1;">
           <tr>
             <td>V1, C1</td>
             <td>V1, c2</td>
@@ -109,32 +109,148 @@
     <!-- Visualization box for Weather Statistics -->
     <div id="weather-statistics-visualization" style="display: none;">
         <!-- Add your weather statistics content here -->
-        <h2>Weather Statistics Visualization</h2>
+        <h2>Weather Statistics</h2>
         <!-- Add visualization elements as needed -->
     </div>
 
     <!-- Visualization box for Powerline Data Statistics -->
     <div id="powerline-data-statistics-visualization" style="display: none;">
         <!-- Add your powerline data statistics content here -->
-        <h2>Powerline Data Statistics Visualization</h2>
+        <h2>Powerline Data</h2>
         <!-- Add visualization elements as needed -->
     </div>
 </div>
 </div>
-<div>
-  {% leaflet_map "gis" callback="window.out_layers" %}
+<div id="map-container">
+  <div id="gis">
+    {% leaflet_map "gis" callback="window.out_layers" %}
+  </div>
+  <button id="toggle-map-size">Toggle Map Size</button>
 </div>
   <script type="text/javascript">
+    /*function out_layers(map, options) {
+      var powerline = new L.GeoJSON.AJAX("{% url 'powerlines'%}", {
+        style: {
+          color: 'red',// Set the color of the line to red
+          dashArray: '10, 10'
+        }
+      });*/
+
     function out_layers(map, options) {
-      var powerline = new L.GeoJSON.AJAX("{% url 'powerlines'%}", {});
-      var Counties = new L.GeoJSON.AJAX("{% url 'KenyaCounties'%}", {});
+    // Function to update the style of the powerline based on voltage data
+    
+      //var googleLayer = new L.Google('ROADMAP');
+      //map.addLayer(googleLayer);
+      /*var geeLayer = L.tileLayer('gee_tile_url', {
+        attribution: 'Google Earth Engine'
+      });
+
+      var overlayLayers = {
+        "Google Earth Engine": geeLayer
+      };
+*/
+      var Aoiparcles = new L.GeoJSON.AJAX("{% url 'Nyeriviewparcels'%}", {
+        pointToLayer: function (feature, latlng) {
+        return L.marker(latlng, {
+            icon: L.divIcon({
+                className: 'parcel-label',
+                html: '<div>' + feature.properties.symbolid.toString() + '</div>'
+              })
+            });
+          }
+        });
+
+
+      var Counties = new L.GeoJSON.AJAX("{% url 'KenyaCounties'%}", {
+              onEachFeature: function(feature, layer){
+                layer.bindPopup(feature.properties.county_nam.toString());
+              }
+            });
+
+      function updatePowerlineStyle(voltageData) {
+              var color = 'red'; // Default color
+              var dashArray = '10, 10'; // Default dashArray
+
+              // Check voltage data conditions
+              if (voltageData >= 100 && voltageData <= 240) {
+                  // Voltage within normal range
+                  color = 'green'; // Change color to green
+                  dashArray = '5, 5'; // Change dashArray for animation
+              } else {
+                  // Voltage outside normal range (fault condition)
+                  color = 'purple'; // Change color to indicate fault
+                  dashArray = '0'; // Disable dashArray for continuous line
+              }
+
+              // Update style of powerline GeoJSON layer
+              powerline.setStyle({
+                  color: color,
+                  dashArray: dashArray
+              });
+            /* powerline.setStyle({
+              color: color,
+              dashArray: dashArray,
+              // Use the Arrow pattern for the line
+              pattern: new L.Pattern.Polyline.Arrow({
+                  weight: 2, // Adjust weight of arrows as needed
+                  color: color // Match color with line color
+              })
+            });*/
+          }
+
+    // Create GeoJSON layer for powerline
+    var powerline = new L.GeoJSON.AJAX("{% url 'powerlines'%}", {
+        /*style: {
+            color: 'red', // Initial color of the line
+            dashArray: '10, 10' // Initial dashArray for animation
+        }*/
+    }).addTo(map);
+
+    // Simulated function to receive voltage data
+    function receiveVoltageData() {
+        // Simulated voltage data, replace this with actual data retrieval logic
+        var voltageData = Math.random() * (300 - 100) + 100; // Random value between 100 and 300
+        // Update powerline style based on voltage data
+        updatePowerlineStyle(voltageData);
+    }
+
+    // Interval to periodically update voltage data (simulated)
+    setInterval(receiveVoltageData, 3000); // Update every 3 seconds, replace with desired interval
       //var powerline = new L.GeoJSON.AJAX("{% url 'powerlines' %}", {});
 
       var layerControl = L.control.layers(null, {
-        "powerline": powerline,
         "Counties": Counties,
+        "Aoiparcels": Aoiparcles,
+        "powerline": powerline,
         // Add more datasets as needed
       }).addTo(map);
+
+      var layerColors = {
+        "Aoiparcles": "Light Purple",
+        "Counties": "orange"
+      };
+
+      var legendContent = {
+        "Powerline": "<img src='powerline_legend.png' width='20' height='20'> Powerline",
+        "Aoiparcles": "<img src='parcel_legend.png' width='20' height='20'> Aoiparcles",
+        "Counties": "<img src='county_legend.png' width='20' height='20'> Counties"
+    };
+
+      // Create a legend control
+      var legend = L.control({position: 'bottomleft'});
+
+        legend.onAdd = function (map) {
+            var div = L.DomUtil.create('div', 'info legend');
+            div.innerHTML += "<h4>Legend</h4>";
+            for (var layer in layerColors) {
+                div.innerHTML +=
+                    '<i style="background:' + layerColors[layer] + '"></i> ' +
+                    layer + '<br>';
+            }
+            return div;
+        };
+
+      legend.addTo(map);
 
       //Default dataset displayed on the map
       powerline.addTo(map);
@@ -170,6 +286,13 @@
         });
       });
 
+      // Options for the marker
+      var markerOptions = {
+        title: "MyLocation",
+        clickable: true,
+        draggable: true
+      }
+
       // Create a custom control for displaying coordinates
       var coordinatesControl = L.control({ position: 'bottomright' });
 
@@ -186,27 +309,9 @@
         document.querySelector('.coordinates-control').innerHTML = 'Latitude: ' + latlng.lat.toFixed(6) + '<br>Longitude: ' + latlng.lng.toFixed(6);
       });
 
-
-      // Initialize the Earth Engine API
-    google.charts.load('current', { 'packages': ['corechart', 'table', 'charteditor'] });
-
-// Add the exported DEM to the map using leaflet-ee-vector
-    var demLayer = L.eeVector.layer({
-      url: 'path/to/your/DEM/kenya_DEM.tif', // Replace with the path to your exported DEM
-      name: 'Kenya DEM',
-      format: 'image/tiff',
-      visParams: { min: 0, max: 3000, palette: ['0000FF', '00FF00', 'FF0000'] }
-    });
-
-    demLayer.addTo(map);
     }
-
-    // Call the initializeMap function when the DOM is ready
-    //document.addEventListener('DOMContentLoaded', function () {
-      //initializeMap();
-    //});
-  </script>
-  <script>
+    </script>
+<script>
     function showDem() {
         hideAllVisualizations();
         document.getElementById('dem-visualization').style.display = 'block';
@@ -261,6 +366,23 @@
 
   // Start the real-time updates
   updateChart();
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+  var mapContainer = document.getElementById("gis");
+  var toggleButton = document.getElementById("toggle-map-size");
+
+  toggleButton.addEventListener("click", function() {
+    if (mapContainer.style.height === "100vh") { // If map is in full window extent
+      mapContainer.style.height = "400px"; // Set original height
+      toggleButton.textContent = "Maximize Map";
+    } else {
+      mapContainer.style.height = "100vh"; // Set full window extent
+      toggleButton.textContent = "Minimize Map";
+    }
+  });
+});
+
 </script>
   <!-- Vendor JS Files -->
   <script src="{% static 'assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>
