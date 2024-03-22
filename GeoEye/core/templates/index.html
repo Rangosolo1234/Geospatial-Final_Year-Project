@@ -121,11 +121,8 @@
     </div>
 </div>
 </div>
-<div id="map-container">
-  <div id="gis">
-    {% leaflet_map "gis" callback="window.out_layers" %}
-  </div>
-  <button id="toggle-map-size">Toggle Map Size</button>
+<div>
+  {% leaflet_map "gis" callback="window.out_layers" %}
 </div>
   <script type="text/javascript">
     /*function out_layers(map, options) {
@@ -150,15 +147,15 @@
       };
 */
       var Aoiparcles = new L.GeoJSON.AJAX("{% url 'Nyeriviewparcels'%}", {
-        pointToLayer: function (feature, latlng) {
-        return L.marker(latlng, {
-            icon: L.divIcon({
-                className: 'parcel-label',
-                html: '<div>' + feature.properties.symbolid.toString() + '</div>'
-              })
-            });
-          }
-        });
+          style: function (feature) {
+              return {
+                  color: 'brown', // You can change the color to obtain best visualiztion
+                  weight: 0.8, // thickness of 0.5
+                  fillOpacity: 0, // make polygons hollow (no fill)
+              };
+          },
+        
+      });
 
 
       var Counties = new L.GeoJSON.AJAX("{% url 'KenyaCounties'%}", {
@@ -167,10 +164,7 @@
               }
             });
 
-      function updatePowerlineStyle(voltageData) {
-              var color = 'red'; // Default color
-              var dashArray = '10, 10'; // Default dashArray
-
+            function updatePowerlineStyle(voltageData) {
               // Check voltage data conditions
               if (voltageData >= 100 && voltageData <= 240) {
                   // Voltage within normal range
@@ -187,6 +181,11 @@
                   color: color,
                   dashArray: dashArray
               });
+              linebrach.setStyle({
+                  color: color,
+                  dashArray: dashArray,
+                  weight: 1.3
+              });
             /* powerline.setStyle({
               color: color,
               dashArray: dashArray,
@@ -197,13 +196,53 @@
               })
             });*/
           }
+      
+      var yellowMarkerStyle = {
+        radius: 5, // Size of the circle marker
+        color: 'yellow', // Color of the circle marker border
+        fillColor: 'yellow', // Fill color of the circle marker
+        fillOpacity: 1, // Opacity of the fill color
+        weight: 4 // Weight of the circle marker border
+      };
+
+
+      var house = new L.GeoJSON.AJAX("{% url 'homes'%}", {
+        pointToLayer: function (feature, latlng) {
+          // Return a circle marker for each point feature
+          return L.circleMarker(latlng, yellowMarkerStyle);
+        }
+      }).addTo(map);
+
+      function updateHouseholdStyle(voltageData) {
+              // Check voltage data conditions
+              if (voltageData >= 100 && voltageData <= 240) {
+                  // Voltage within normal range
+                  color = 'blue'; // Change color to green
+                 // Change dashArray for animation
+              } else {
+                  // Voltage outside normal range (fault condition)
+                  color = 'red'; // Change color to indicate fault
+              }
+
+              // Update style of powerline GeoJSON layer
+              house.setStyle({
+                  color: color,
+              });
+          }
+
+    var linebrach = new L.GeoJSON.AJAX("{% url 'linebraches'%}", {
+      style: {
+        color: 'red', // Initial color of the line
+        dashArray: '10, 10' // Initial dashArray for animation
+      }
+    });
 
     // Create GeoJSON layer for powerline
     var powerline = new L.GeoJSON.AJAX("{% url 'powerlines'%}", {
-        /*style: {
+        style: {
             color: 'red', // Initial color of the line
             dashArray: '10, 10' // Initial dashArray for animation
-        }*/
+        }
     }).addTo(map);
 
     // Simulated function to receive voltage data
@@ -212,6 +251,8 @@
         var voltageData = Math.random() * (300 - 100) + 100; // Random value between 100 and 300
         // Update powerline style based on voltage data
         updatePowerlineStyle(voltageData);
+        updateHouseholdStyle(voltageData);
+
     }
 
     // Interval to periodically update voltage data (simulated)
@@ -222,12 +263,15 @@
         "Counties": Counties,
         "Aoiparcels": Aoiparcles,
         "powerline": powerline,
+        "linebrach": linebrach,
+        "houses": house,
         // Add more datasets as needed
       }).addTo(map);
 
       var layerColors = {
-        "Aoiparcles": "Light Purple",
-        "Counties": "orange"
+        "powerlines": "purple",
+        "Aoiparcles": "brown",
+        "Counties": "orange",
       };
 
       var legendContent = {
@@ -239,18 +283,22 @@
       // Create a legend control
       var legend = L.control({position: 'bottomleft'});
 
-        legend.onAdd = function (map) {
-            var div = L.DomUtil.create('div', 'info legend');
-            div.innerHTML += "<h4>Legend</h4>";
-            for (var layer in layerColors) {
-                div.innerHTML +=
-                    '<i style="background:' + layerColors[layer] + '"></i> ' +
-                    layer + '<br>';
-            }
-            return div;
-        };
+legend.onAdd = function (map) {
+    var div = L.DomUtil.create('div', 'info legend');
+    div.innerHTML += "<h4>Legend</h4>";
+    for (var layer in layerColors) {
+        div.innerHTML +=
+            '<i style="background:' + layerColors[layer] + '"></i> ' +
+            layer + '<br>';
+    }
+    return div;
+};
 
-      legend.addTo(map);
+legend.addTo(map);
+
+// Custom CSS styling
+document.querySelector('.legend').style.backgroundColor = 'white';
+document.querySelector('.legend').style.border = '2px solid black';
 
       //Default dataset displayed on the map
       powerline.addTo(map);
@@ -366,23 +414,6 @@
 
   // Start the real-time updates
   updateChart();
-</script>
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-  var mapContainer = document.getElementById("gis");
-  var toggleButton = document.getElementById("toggle-map-size");
-
-  toggleButton.addEventListener("click", function() {
-    if (mapContainer.style.height === "100vh") { // If map is in full window extent
-      mapContainer.style.height = "400px"; // Set original height
-      toggleButton.textContent = "Maximize Map";
-    } else {
-      mapContainer.style.height = "100vh"; // Set full window extent
-      toggleButton.textContent = "Minimize Map";
-    }
-  });
-});
-
 </script>
   <!-- Vendor JS Files -->
   <script src="{% static 'assets/vendor/purecounter/purecounter_vanilla.js' %}"></script>

@@ -7,4 +7,6 @@ urlpatterns = [
     path('counties_datasets', views.counties_datasets, name = 'KenyaCounties'),
     path('powerlinedata/', views.powerlinephase, name = 'powerlines'),
     path('parcels', views.parcels, name = 'Nyeriviewparcels'),
+    path('branches', views.branches, name = 'linebraches'),
+    path('houses', views.households, name = 'homes'),
 ]

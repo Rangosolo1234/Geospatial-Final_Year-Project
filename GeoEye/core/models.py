@@ -82,3 +82,37 @@ class Cadastral(models.Model):
 
     #Other fileds not much necessary
         
+class Branches(models.Model):
+    name = models.CharField(max_length=254)
+    folderpath = models.CharField(max_length=254)
+    symbolid = models.BigIntegerField()
+    altmode = models.IntegerField()
+    base = models.FloatField()
+    clamped = models.IntegerField()
+    extruded = models.IntegerField()
+    snippet = models.CharField(max_length=254, null=True)
+    popupinfo = models.CharField(max_length=254, null=True)
+    shape_leng = models.FloatField()
+    geom = models.MultiLineStringField(srid=4326)
+    def __str__(self):
+        return self.name
+    class Meta:
+        verbose_name_plural = "Branchess"
+
+
+class Households(models.Model):
+    name = models.CharField(max_length=254)
+    folderpath = models.CharField(max_length=254)
+    symbolid = models.BigIntegerField()
+    altmode = models.IntegerField()
+    base = models.FloatField()
+    snippet = models.CharField(max_length=254, null=True)
+    popupinfo = models.CharField(max_length=254, null=True)
+    haslabel = models.IntegerField()
+    labelid = models.BigIntegerField()
+    geom = models.MultiPointField(srid=4326)
+
+    def __str__(self):
+        return self.name
+    class meta:
+        verbose_name_plural="Householdss"
