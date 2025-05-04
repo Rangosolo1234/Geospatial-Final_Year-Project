@@ -46,7 +46,6 @@ This project leverages Geospatial IoT to enable real-time power monitoring using
 7. Upload shapefiles using the web interface.
 
 ## Project Results
-![Enguli_LULC](https://github.com/user-attachments/assets/2681fd96-15d2-43b6-90a6-ef99c0cf9cf6)
 
 ## Future Improvements
 - **Machine Learning Integration:** Predictive analytics for fault detection
