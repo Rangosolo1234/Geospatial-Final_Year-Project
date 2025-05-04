@@ -46,6 +46,13 @@ This project leverages Geospatial IoT to enable real-time power monitoring using
 7. Upload shapefiles using the web interface.
 
 ## Project Results
+![1](https://github.com/user-attachments/assets/cf06c20e-c6ef-41bb-86bd-106abb2a8990)
+![4](https://github.com/user-attachments/assets/49e32784-6126-4bc4-be35-f0d1f16f9b26)
+![3](https://github.com/user-attachments/assets/968e879e-f7ed-4b9e-afd0-4400a915642d)
+![2](https://github.com/user-attachments/assets/305762e7-dbc0-46bb-9e9a-37c9e3770453)
+![IMG_20240309_101017](https://github.com/user-attachments/assets/e92ec438-1ab1-4222-acd1-9be2161d47d4)
+![IMG_20240328_202216](https://github.com/user-attachments/assets/8aefba5d-9f4d-40bb-b472-ff3acba5775c)
+![IMG_20240329_190625](https://github.com/user-attachments/assets/54d1ef54-d6d3-4655-a39e-9dbebd672a19)
 
 ## Future Improvements
 - **Machine Learning Integration:** Predictive analytics for fault detection
