@@ -1,4 +1,4 @@
-# Geospatial IoT Real-Time Power Monitoring
+# Geospatial IoT Integration For Real-Time Power Monitoring
 
 ## Project Overview
 This project leverages Geospatial IoT to enable real-time power monitoring using the **ZMPT101B voltage sensor**, **LoRa technology**, and **Arduino Nano**. The system continuously monitors electrical faults and transmits location-based alerts for immediate response.
